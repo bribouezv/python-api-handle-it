@@ -17,15 +17,16 @@ pipeline {
 				sh "docker run --rm --volume \$(pwd) secfigo/bandit:latest"
 			}
 		}
-		stage ("Dependency Check with Python Safety"){
-			steps{
-				catchError {
-				sh "docker run --rm --volume \$(pwd) pyupio/safety:latest safety check"
-				sh "docker run --rm --volume \$(pwd) pyupio/safety:latest safety check --json > report.json"
-				}
-				echo currendBuild.result
+			stage("Dependency Check with Python Safety") {
+			    steps {
+			        catchError {
+			            sh "docker run --rm --volume \$(pwd) pyupio/safety:latest safety check"
+			            sh "docker run --rm --volume \$(pwd) pyupio/safety:latest safety check --json > report.json"
+			        }
+			        echo currentBuild.result
+			    }
 			}
-		}
+
 		stage ("Static Analysis with python-taint"){
 			steps{
 				sh "docker run --rm --volume \$(pwd) vickyrajagopal/python-taint-docker pyt ."
